@@ -5,19 +5,30 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCommandeRequest;
 use App\Http\Requests\UpdateCommandeRequest;
 use App\Repositories\CommandeRepository;
+use App\Repositories\ProductRepository;
+use App\Repositories\ClientRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\Client;
 use Flash;
 use Response;
+use DB;
 
 class CommandeController extends AppBaseController
 {
     /** @var  CommandeRepository */
     private $commandeRepository;
+    /** @var  ProductRepository */
+    private $productRepository;
+     /** @var  ClientRepository */
+     private $clientRepository;
 
-    public function __construct(CommandeRepository $commandeRepo)
+    public function __construct(CommandeRepository $commandeRepo, 
+                                ProductRepository $productRepository,
+                                ClientRepository $clientRepository)
     {
         $this->commandeRepository = $commandeRepo;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -30,7 +41,7 @@ class CommandeController extends AppBaseController
     public function index(Request $request)
     {
         $commandes = $this->commandeRepository->all();
-
+        
         return view('commandes.index')
             ->with('commandes', $commandes);
     }
@@ -42,7 +53,10 @@ class CommandeController extends AppBaseController
      */
     public function create()
     {
-        return view('commandes.create');
+       $number = count($this->commandeRepository->all()) + 1;
+       $numero_commande = mt_rand(1000, 100000) + $number;
+       $products = $this->productRepository->all();
+        return view('commandes.create', compact('numero_commande', 'products'));
     }
 
     /**
@@ -54,13 +68,38 @@ class CommandeController extends AppBaseController
      */
     public function store(CreateCommandeRequest $request)
     {
-        $input = $request->all();
+        DB::beginTransaction();
+        //try {
+            $inputClient = $request->only('lastname','firstname','email', 'telephone');
+            $client = Client::whereEmail($request->get('email'))->first();
+            if(!$client){
+                $client = $this->clientRepository->create($inputClient);
+            }
+            $commande = $this->commandeRepository->create([
+                'client_id' => $client->id,
+                'numero_commande' => $request->get('numero_commande')
+            ]);
+            $i = 0;
+            foreach ($request->get('products') as $product) {
+                
+                $commande->products()->attach($product, [
+                    'prix_unit' => $request->get('prix_unit')[$i],
+                    'quantity' => $request->get('quantity')[$i]
+                     ]);
+                $i++; 
+            }
+            
 
-        $commande = $this->commandeRepository->create($input);
+            Flash::success('Commande saved successfully.');
+            DB::commit();
+            return redirect(route('commandes.index'));
+        // } catch (\Throwable $th) {
+        //  Flash::error('Error save commande.');
 
-        Flash::success('Commande saved successfully.');
-
-        return redirect(route('commandes.index'));
+        //     DB::rollback();
+        //     return  redirect()->back()->withInput();
+        // }
+       
     }
 
     /**
@@ -93,14 +132,14 @@ class CommandeController extends AppBaseController
     public function edit($id)
     {
         $commande = $this->commandeRepository->find($id);
-
+        $products = $this->productRepository->all();
         if (empty($commande)) {
             Flash::error('Commande not found');
 
             return redirect(route('commandes.index'));
         }
 
-        return view('commandes.edit')->with('commande', $commande);
+        return view('commandes.edit', compact("commande","products"));
     }
 
     /**

@@ -41,4 +41,8 @@ class CommandeRepository extends BaseRepository
     {
         return Commande::class;
     }
+    public function groupByNumeroCommande()
+    {
+       return Commande::groupBy('numero_commande')->get();
+    }
 }

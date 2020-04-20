@@ -54,13 +54,23 @@ class ProductController extends AppBaseController
      */
     public function store(CreateProductRequest $request)
     {
-        $input = $request->all();
 
-        $product = $this->productRepository->create($input);
+        $upload = $this->productRepository->upload($request);
+        if ($upload) {
+            $product = $this->productRepository->create([
+                "name" => $request->get('name'),
+                "price" => $request->get('price'),
+                "description" => $request->get('description'),
+                "picture" => $request->file('picture')->getClientOriginalName()
+            ]);
+            Flash::success('Product saved successfully.');
+            return redirect(route('products.index'));
+        } else {
+            Flash::success('Error when upload file');
+            return redirect()->back();
+        }
 
-        Flash::success('Product saved successfully.');
 
-        return redirect(route('products.index'));
     }
 
     /**
@@ -153,4 +163,6 @@ class ProductController extends AppBaseController
 
         return redirect(route('products.index'));
     }
+
+
 }

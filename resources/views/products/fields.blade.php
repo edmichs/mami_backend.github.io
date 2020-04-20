@@ -18,8 +18,9 @@
 
 <!-- Picture Field -->
 <div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('picture', 'Picture:') !!}
-    {!! Form::textarea('picture', null, ['class' => 'form-control']) !!}
+        {!! Form::label('picture', 'Picture:') !!}
+        <input type="file" accept="image/*" name="picture" onchange="preview_image(event)">
+        <img id="output_image"/>
 </div>
 
 <!-- Submit Field -->

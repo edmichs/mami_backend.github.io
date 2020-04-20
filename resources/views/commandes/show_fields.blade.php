@@ -1,30 +1,55 @@
 <!-- Client Id Field -->
-<div class="form-group">
-    {!! Form::label('client_id', 'Client Id:') !!}
-    <p>{{ $commande->client_id }}</p>
+<div class="form-group text-center">
+    <p>Numero Commande : <strong>{{ $commande->numero_commande }}</strong></p>
 </div>
-
+<div class="form-group col-md-6">
+    {!! Form::label('lastname', 'Nom :') !!}
+    <p>{{ $commande->client->lastname }}</p>
+</div>
+<div class="form-group col-md-6">
+    {!! Form::label('firstname', 'Prenom :') !!}
+    <p>{{ $commande->client->firstname }}</p>
+</div>
+<div class="form-group col-md-6">
+    {!! Form::label('email', 'Email :') !!}
+    <p>{{ $commande->client->email }}</p>
+</div>
+<div class="form-group col-md-6">
+    {!! Form::label('telephone', 'telephone :') !!}
+    <p>{{ $commande->client->telephone }}</p>
+</div>
 <!-- Product Id Field -->
-<div class="form-group">
-    {!! Form::label('product_id', 'Product Id:') !!}
-    <p>{{ $commande->product_id }}</p>
-</div>
-
-<!-- Prix Unit Field -->
-<div class="form-group">
-    {!! Form::label('prix_unit', 'Prix Unit:') !!}
-    <p>{{ $commande->prix_unit }}</p>
-</div>
+<h3 class="text-muted">Liste des produits de la commande</h3>
+<table class="table table-hovered table-bordered">
+    <thead>
+        <th>Nom du produit</th>
+        <th>Description</th>
+        <th>Prix Unitaire</th>
+        <th>Quantité</th>
+    </thead>
+    <tbody>
+    @php
+        $sum = 0;
+    @endphp
+        @foreach ($commande->products as $product)
+            <tr>
+                <td>{{$product->name}}</td>
+                <td>{{$product->description}}</td>
+                <td>{{$product->pivot->prix_unit}}</td>
+                <td>{{$product->pivot->quantity}}</td>
+            </tr>
+            @php
+                $sum += $product->pivot->prix_unit * $product->pivot->quantity;
+            @endphp
+        @endforeach
+    </tbody>
+</table>
 
 <!-- Nombre Total Field -->
 <div class="form-group">
-    {!! Form::label('nombre_total', 'Nombre Total:') !!}
-    <p>{{ $commande->nombre_total }}</p>
+    <p>Montant Total : <strong>{{$sum}} </strong> Fcfa</p>
 </div>
 
 <!-- Numerp Commande Field -->
-<div class="form-group">
-    {!! Form::label('numerp_commande', 'Numerp Commande:') !!}
-    <p>{{ $commande->numerp_commande }}</p>
-</div>
+
 

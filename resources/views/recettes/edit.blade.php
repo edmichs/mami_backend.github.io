@@ -21,3 +21,9 @@
        </div>
    </div>
 @endsection
+@section('js')
+       <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>  
+       <script>
+            CKEDITOR.replace('recette', {customConfig: '/js/ckeditor.js'});  
+        </script>
+@endsection

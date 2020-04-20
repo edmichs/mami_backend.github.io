@@ -1,12 +1,12 @@
 <div class="table-responsive">
-    <table class="table" id="products-table">
+    <table class="table table display  nowrap" id="example">
         <thead>
             <tr>
                 <th>Name</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Picture</th>
-                <th colspan="3">Action</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Picture</th>
+                <th >Action</th>
             </tr>
         </thead>
         <tbody>
@@ -15,7 +15,7 @@
                 <td>{{ $product->name }}</td>
             <td>{{ $product->price }}</td>
             <td>{{ $product->description }}</td>
-            <td>{{ $product->picture }}</td>
+            <td> <img src="/images/uploads/products/{{ Auth::user()->id }}/{{ $product->picture }}" alt="product picture" srcset="" style="max-width:100px;"> </td>
                 <td>
                     {!! Form::open(['route' => ['products.destroy', $product->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

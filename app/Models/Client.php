@@ -61,6 +61,11 @@ class Client extends Model
         'telephone' => 'required',
         'address' => 'required'
     ];
-
+    
+    public function commandes()
+    {
+        return $this->hasMany('App\Models\Commande', 'client_id');
+    }
+    
 
 }

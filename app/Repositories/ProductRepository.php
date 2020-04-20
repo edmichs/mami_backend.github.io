@@ -4,6 +4,9 @@ namespace App\Repositories;
 
 use App\Models\Product;
 use App\Repositories\BaseRepository;
+use App\Http\Requests\CreateProductRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ProductRepository
@@ -39,5 +42,9 @@ class ProductRepository extends BaseRepository
     public function model()
     {
         return Product::class;
+    }
+    public function upload(CreateProductRequest $request)
+    {
+        return $request->file('picture')->move(public_path('/images/uploads/products/'.Auth::user()->id.'/'), $request->file('picture')->getClientOriginalName());
     }
 }

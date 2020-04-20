@@ -32,7 +32,7 @@ class Commande extends Model
         'product_id',
         'prix_unit',
         'nombre_total',
-        'numerp_commande'
+        'numero_commande'
     ];
 
     /**
@@ -46,7 +46,7 @@ class Commande extends Model
         'product_id' => 'integer',
         'prix_unit' => 'integer',
         'nombre_total' => 'integer',
-        'numerp_commande' => 'string'
+        'numero_commande' => 'string'
     ];
 
     /**
@@ -55,12 +55,19 @@ class Commande extends Model
      * @var array
      */
     public static $rules = [
-        'client_id' => 'required',
-        'product_id' => 'required',
-        'prix_unit' => 'required',
-        'nombre_total' => 'required',
-        'numerp_commande' => 'required'
+        'lastname' => 'required',
+        'email' => 'required|email',
+        'telephone' => 'required',
+        'numero_commande' => 'required'
     ];
-
+    
+    public function client()
+    {
+        return $this->belongsTo('App\Models\Client', 'client_id');
+    }
+    public function products()
+    {
+        return $this->belongsToMany('App\Models\Product', 'commande_clients', 'commande_id', 'product_id')->using('App\CommandeClient')->withPivot('prix_unit','quantity')->withTimestamps();
+    }
 
 }

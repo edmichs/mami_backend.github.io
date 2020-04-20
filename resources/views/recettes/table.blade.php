@@ -1,11 +1,11 @@
 <div class="table-responsive">
-    <table class="table" id="recettes-table">
+    <table class="table display  nowrap " id="example">
         <thead>
             <tr>
                 <th>Name</th>
         <th>Dificulte</th>
         <th>Recette</th>
-                <th colspan="3">Action</th>
+                <th >Action</th>
             </tr>
         </thead>
         <tbody>

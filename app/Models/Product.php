@@ -58,5 +58,9 @@ class Product extends Model
         'picture' => 'required'
     ];
 
-
+    public function commandes()
+    {
+        return $this->hasMany('App\Models\Commande', 'client_id');
+    }
+    
 }

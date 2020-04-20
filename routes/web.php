@@ -17,27 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->middleware('verified');
 
-Route::resource('clients', 'ClientController');
+Route::resource('clients', 'ClientController')->middleware('verified');
 
-Route::resource('commandes', 'CommandeController');
+Route::resource('commandes', 'CommandeController')->middleware('verified');
 
-Route::resource('products', 'ProductController');
+Route::resource('products', 'ProductController')->middleware('verified');
 
-Route::resource('recettes', 'RecetteController');
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-
-Auth::routes(['verify' => true]);
-
-Route::get('/home', 'HomeController@index')->middleware('verified');
+Route::resource('recettes', 'RecetteController')->middleware('verified');
